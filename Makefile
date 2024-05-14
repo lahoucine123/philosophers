@@ -10,24 +10,28 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRC = $(wildcard *.c)
+SRC_DIR = src/
+OBJ_DIR = obj/
 
-OBJ = $(SRC:.c=.o)
+SRC = $(wildcard src/*.c)
+
+OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 NAME = philo
 
-CFLAGS = #-Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	gcc $(CFLAGS) -pthread -o $(NAME) $(OBJ)
+	cc $(CFLAGS) -o $(NAME) $(OBJ)
 
 leak: $(OBJ)
-	gcc $(CFLAGS) -pthread -fsanitize=address -g3 -o $(NAME) $(OBJ)
+	cc -no-pie -pthread  -fsanitize=thread -g3  $(OBJ) -o $(NAME)
 
-%.o: %.c
-	gcc $(CFLAGS) -g3 -c $< -o $@
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	@mkdir -p $(OBJ_DIR)
+	cc $(CFLAGS) -g3 -c $< -o $@
 
 clean:
 	rm -f $(OBJ)
@@ -36,3 +40,4 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+.PHONY: all 
