@@ -12,7 +12,13 @@
 
 #include "philo.h"
 
-int	ft_atoi(char *str)
+void	clean_exit(t_control *ctl)
+{
+	free(ctl);
+	ft_error(2);
+}
+
+int	ft_atoi(char *str, t_control *ctl)
 {
 	int		i;
 	int		sign;
@@ -25,7 +31,7 @@ int	ft_atoi(char *str)
 	{
 		sign = 44 - str[i++];
 		if (str[i] == 0)
-			ft_error(2);
+			clean_exit(ctl);
 	}
 	while (str[i] < 58 && str[i] > 47)
 	{
@@ -35,6 +41,41 @@ int	ft_atoi(char *str)
 	}
 	res = sign * res;
 	if (str[i] != 0 || res > INT_MAX || res < INT_MIN || sign == -1)
-		ft_error(2);
+		clean_exit(ctl);
 	return ((int )res);
+}
+
+int	check_if_full(t_philo *tmp)
+{
+	int	i;
+	int	num;
+
+	num = tmp->ctl->num_of_philo;
+	i = 0;
+	while (tmp->eating_times >= tmp->ctl->num_eat && i <= num)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	if (i >= tmp->ctl->num_of_philo)
+		return (1);
+	return (0);
+}
+
+void	ft_clean(t_philo *tmp, t_control *ctl, int num)
+{
+	int		i;
+	t_philo	*tmp2;
+
+	i = 0;
+	while (i < num)
+	{
+		tmp2 = tmp->next;
+		free(tmp);
+		pthread_mutex_destroy(ctl->forks + i);
+		tmp = tmp2;
+		i++;
+	}
+	free(ctl->forks);
+	free(ctl);
 }

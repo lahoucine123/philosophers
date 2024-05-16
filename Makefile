@@ -13,7 +13,7 @@
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC = $(wildcard src/*.c)
+SRC = src/ft_error.c src/ft_utils.c src/init.c src/main.c src/philo.c src/time.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
@@ -24,20 +24,21 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	cc $(CFLAGS) -o $(NAME) $(OBJ)
+	gcc $(CFLAGS) -o $(NAME) $(OBJ)
 
 leak: $(OBJ)
-	cc -no-pie -pthread  -fsanitize=thread -g3  $(OBJ) -o $(NAME)
+	gcc -no-pie -pthread  -fsanitize=thread -g3  $(OBJ) -o $(NAME)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
-	cc $(CFLAGS) -g3 -c $< -o $@
+	gcc $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
+	@rm -rf $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -rf $(OBJ_DIR)
+	@rm -rf $(NAME)
 
 re: fclean all
 .PHONY: all 

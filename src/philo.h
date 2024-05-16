@@ -19,18 +19,18 @@
 
 typedef struct s_control
 {
-	int		num_of_philo;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		num_eat;
+	int				num_of_philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				num_eat;
 	int				status;
 	long long		start_time;
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	*forks;
 }	t_control;
 
-typedef struct s_philo 
+typedef struct s_philo
 {
 	int				philo_id;
 	int				eating_times;
@@ -44,9 +44,10 @@ typedef struct s_philo
 
 typedef struct timeval	t_time;
 
-
 /* utils functions */
-int			ft_atoi(char *str);
+int			ft_atoi(char *str, t_control *ctl);
+void		ft_clean(t_philo *tmp, t_control *ctl, int num);
+int			check_if_full(t_philo *tmp);
 
 /* error functions */
 void		ft_usage(void);
@@ -57,7 +58,15 @@ long long	ft_time(long long start_time, long long last_meal);
 void		ft_usleep(int sleeptime);
 
 /* initialization functions */
-t_philo *allocate_philo(int id, t_control *ctl);
-void philosophers_init(t_philo **head, t_control *ctl);
-t_control *controls_init(int ac, char **av);
-t_control *parsing(int ac, char **av);
+t_philo		*allocate_philo(int id, t_control *ctl);
+void		philosophers_init(t_philo **head, t_control *ctl);
+t_control	*controls_init(int ac, char **av, t_control *ctl);
+t_control	*parsing(int ac, char **av);
+
+/* algo utils functions */
+void		write_message(long long time, t_philo *philo, char *str);
+void		philo_cycle(t_philo *tmp, long long stime);
+void		first_meal(t_philo *philo, long long stime);
+void		one(t_philo *tmp);
+void		multi_threads(t_philo *tmp, int num);
+void		*routine(t_philo *philo);

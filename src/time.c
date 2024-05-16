@@ -12,31 +12,30 @@
 
 #include "philo.h"
 
-/* this functions is responsible for the time in all situations */
-long long ft_time(long long curr_time, long long last_meal)
+long long	ft_time(long long curr_time, long long last_meal)
 {
-    t_time tv;
-    long long tmp;
+	t_time		tv;
+	long long	tmp;
 
-    gettimeofday(&tv, NULL);
-    tmp = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-    if (curr_time == -1 && last_meal == -1)
-        return (tmp);                           /* returns the current time */
-    if (last_meal != -1)
-        return (tmp - last_meal);               /* returns the time btw last_meal and curr_time */
-    return (tmp - curr_time);
+	gettimeofday(&tv, NULL);
+	tmp = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	if (curr_time == -1 && last_meal == -1)
+		return (tmp);
+	if (last_meal != -1)
+		return (tmp - last_meal);
+	return (tmp - curr_time);
 }
 
-void    ft_usleep(int sleeptime)
+void	ft_usleep(int sleeptime)
 {
-    t_time tv;
-    long long tmp;
+	t_time		tv;
+	long long	tmp;
 
-    gettimeofday(&tv, NULL);
-    tmp = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-    while ((tv.tv_sec * 1000 + tv.tv_usec / 1000) - tmp < sleeptime)
-    {
-        usleep(1);
-        gettimeofday(&tv, NULL);
-    }
+	gettimeofday(&tv, NULL);
+	tmp = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	while ((tv.tv_sec * 1000 + tv.tv_usec / 1000) - tmp < sleeptime)
+	{
+		usleep(1);
+		gettimeofday(&tv, NULL);
+	}
 }
