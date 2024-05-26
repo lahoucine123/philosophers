@@ -10,39 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
-
-void	setup_forks(int id, t_control *ctl, t_philo *philo)
-{
-	if (id % 2)
-	{
-		philo->second_fork = (ctl->forks) + id;
-		if (philo->philo_id == 0)
-			philo->first_fork = (ctl->forks) + ctl->num_of_philo - 1;
-		else
-			philo->first_fork = (ctl->forks) + id - 1;
-	}
-	else
-	{
-		philo->first_fork = (ctl->forks) + id;
-		if (philo->philo_id == 0)
-			philo->second_fork = (ctl->forks) + ctl->num_of_philo - 1;
-		else
-			philo->second_fork = (ctl->forks) + id - 1;
-	}
-}
+#include "philo_bonus.h"
 
 t_philo	*allocate_philo(int id, t_control *ctl)
 {
 	t_philo	*philo;
 
 	philo = malloc(sizeof(t_philo));
-	philo->philo_id = id;
-	philo->eating_times = 0;
+	if (!philo)
+		return (NULL);
+	philo->id = id;
 	philo->next = NULL;
 	philo->ctl = ctl;
 	philo->last_meal = ctl->start_time;
-	setup_forks(id, ctl, philo);
+	philo->eating_times = ctl->num_eat;
 	return (philo);
 }
 
@@ -86,15 +67,9 @@ t_control	*controls_init(int ac, char **av, t_control *control)
 	control->num_eat = -1;
 	if (ac == 6)
 		control->num_eat = ft_atoi(av[5], control);
-	pthread_mutex_init(&control->mutex, NULL);
-	control->forks = malloc(sizeof(pthread_mutex_t) * control->num_of_philo);
-	while (i < control->num_of_philo)
-	{
-		pthread_mutex_init(&control->forks[i], NULL);
-		i++;
-	}
-	control->start_time = ft_time(-1, -1);
+	control->start_time = ft_time(-1, -1) + 400;
 	control->status = 0;
+	control->forks = NULL;
 	return (control);
 }
 

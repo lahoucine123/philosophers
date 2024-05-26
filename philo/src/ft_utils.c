@@ -12,13 +12,7 @@
 
 #include "philo.h"
 
-void	clean_exit(t_control *ctl)
-{
-	free(ctl);
-	ft_error(2);
-}
-
-int	ft_atoi(char *str, t_control *ctl)
+int	ft_atoi(char *str, int *err)
 {
 	int		i;
 	int		sign;
@@ -27,11 +21,13 @@ int	ft_atoi(char *str, t_control *ctl)
 	i = 0;
 	res = 0;
 	sign = 1;
+	if (str[0] == 0)
+		*err += ft_error(2);
 	if (str[i] == '-' || str[i] == '+')
 	{
 		sign = 44 - str[i++];
 		if (str[i] == 0)
-			clean_exit(ctl);
+			*err += ft_error(2);
 	}
 	while (str[i] < 58 && str[i] > 47)
 	{
@@ -41,7 +37,7 @@ int	ft_atoi(char *str, t_control *ctl)
 	}
 	res = sign * res;
 	if (str[i] != 0 || res > INT_MAX || res < INT_MIN || sign == -1)
-		clean_exit(ctl);
+		*err += ft_error(2);
 	return ((int )res);
 }
 

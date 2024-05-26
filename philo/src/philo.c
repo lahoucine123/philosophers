@@ -17,7 +17,7 @@ void	write_message(long long time, t_philo *philo, char *str)
 	pthread_mutex_lock(&philo->ctl->mutex);
 	if (philo->ctl->status == 0)
 	{
-		printf("%lld\t%d %s\n", time, philo->philo_id, str);
+		printf("%lld\t%d %s\n", time, philo->philo_id + 1, str);
 		pthread_mutex_unlock(&philo->ctl->mutex);
 	}
 	else
@@ -45,11 +45,11 @@ void	philo_cycle(t_philo *tmp, long long stime)
 	tmp->last_meal = ft_time(-1, -1);
 	tmp->eating_times++;
 	pthread_mutex_unlock(&tmp->ctl->mutex);
-	ft_usleep(tmp->ctl->time_to_eat);
+	ft_usleep_pro(tmp->ctl->time_to_eat, tmp->ctl);
 	pthread_mutex_unlock(tmp->second_fork);
 	pthread_mutex_unlock(tmp->first_fork);
 	write_message(ft_time(stime, -1), tmp, "is sleeping");
-	ft_usleep(tmp->ctl->time_to_sleep);
+	ft_usleep_pro(tmp->ctl->time_to_sleep, tmp->ctl);
 	write_message(ft_time(stime, -1), tmp, "is thinking");
 }
 
@@ -85,7 +85,11 @@ void	multi_threads(t_philo *tmp, int num)
 	i = 0;
 	while (i < num)
 	{
-		pthread_create(&tmp->thread, NULL, (void *)routine, tmp);
+		if (pthread_create(&tmp->thread, NULL, (void *)routine, tmp))
+		{
+			printf("Error: pthread_create failed!\n");
+			return ;
+		}
 		tmp = tmp->next;
 		i++;
 	}

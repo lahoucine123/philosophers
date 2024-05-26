@@ -6,32 +6,33 @@
 #    By: laoubaid <laoubaid@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/10 11:42:23 by laoubaid          #+#    #+#              #
-#    Updated: 2024/05/11 13:50:04 by laoubaid         ###   ########.fr        #
+#    Updated: 2024/05/22 21:00:03 by laoubaid         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC = src/ft_error.c src/ft_utils.c src/init.c src/main.c src/philo.c src/time.c
+SRC = src/ft_error_bonus.c src/main_bonus.c src/time_bonus.c src/ft_utils_bonus.c \
+	src/init_bonus.c src/philo_bonus.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
-NAME = philo
+NAME = philo_bonus
 
+CC = cc 
 CFLAGS = -Wall -Wextra -Werror
 
-all: $(NAME)
+all: bonus
+
+bonus: $(NAME)
 
 $(NAME): $(OBJ)
-	gcc $(CFLAGS) -o $(NAME) $(OBJ)
-
-leak: $(OBJ)
-	gcc -no-pie -pthread  -fsanitize=thread -g3  $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
-	gcc $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm -rf $(OBJ)
@@ -41,4 +42,4 @@ fclean: clean
 	@rm -rf $(NAME)
 
 re: fclean all
-.PHONY: all 
+.PHONY: all bonus clean fclean re

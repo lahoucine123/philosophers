@@ -29,19 +29,19 @@ void	*routine(t_philo *philo)
 		pthread_mutex_lock(&philo->ctl->mutex);
 	}
 	pthread_mutex_unlock(&philo->ctl->mutex);
-	usleep(1);
+	ft_usleep(500);
 	return (NULL);
 }
 
 void	monitor(t_philo *philo, long long stime)
 {
-	t_philo		*tmp_ph;
+	t_philo		*tmp;
 
-	tmp_ph = philo;
+	tmp = philo;
 	while (1)
 	{
 		pthread_mutex_lock(&philo->ctl->mutex);
-		if (ft_time(-1, tmp_ph->last_meal) > tmp_ph->ctl->time_to_die)
+		if (ft_time(-1, tmp->last_meal) > tmp->ctl->time_to_die)
 		{
 			pthread_mutex_unlock(&philo->ctl->mutex);
 			break ;
@@ -53,12 +53,12 @@ void	monitor(t_philo *philo, long long stime)
 			return ;
 		}
 		pthread_mutex_unlock(&philo->ctl->mutex);
-		tmp_ph = tmp_ph->next;
+		tmp = tmp->next;
 	}
 	pthread_mutex_lock(&philo->ctl->mutex);
 	philo->ctl->status = 1;
 	pthread_mutex_unlock(&philo->ctl->mutex);
-	printf("%lld\t%d %s\n", ft_time(-1, -1) - stime, tmp_ph->philo_id, "died");
+	printf("%lld\t%d %s\n", ft_time(-1, -1) - stime, tmp->philo_id + 1, "died");
 }
 
 void	ft_philo(t_control *ctl, t_philo *philo)
@@ -89,6 +89,14 @@ int	main(int ac, char **av)
 	t_philo		*philo;
 
 	control = parsing(ac, av);
+	if (!control)
+		return (1);
+	if (control->num_eat == 0)
+	{
+		free(control->forks);
+		free(control);
+		return (0);
+	}
 	philosophers_init(&philo, control);
 	ft_philo(control, philo);
 	return (0);

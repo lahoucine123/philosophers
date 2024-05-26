@@ -10,12 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
-#include <sys/time.h>
+#ifndef PHILO_H
+# define PHILO_H
+
+# include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include <sys/time.h>
 
 typedef struct s_control
 {
@@ -45,17 +48,18 @@ typedef struct s_philo
 typedef struct timeval	t_time;
 
 /* utils functions */
-int			ft_atoi(char *str, t_control *ctl);
+int			ft_atoi(char *str, int *err);
 void		ft_clean(t_philo *tmp, t_control *ctl, int num);
 int			check_if_full(t_philo *tmp);
 
 /* error functions */
 void		ft_usage(void);
-void		ft_error(int opt);
+int			ft_error(int opt);
 
 /* time functions */
 long long	ft_time(long long start_time, long long last_meal);
 void		ft_usleep(int sleeptime);
+void		ft_usleep_pro(int sleeptime, t_control *ctl);
 
 /* initialization functions */
 t_philo		*allocate_philo(int id, t_control *ctl);
@@ -70,3 +74,5 @@ void		first_meal(t_philo *philo, long long stime);
 void		one(t_philo *tmp);
 void		multi_threads(t_philo *tmp, int num);
 void		*routine(t_philo *philo);
+
+#endif

@@ -24,7 +24,7 @@ void	ft_usage(void)
 	write(2, "    OPTIONAL:\tnumber_of_times_each_philosopher_must_eat\n", 57);
 }
 
-void	ft_error(int opt)
+int	ft_error(int opt)
 {
 	if (opt == 1)
 		ft_usage();
@@ -32,5 +32,5 @@ void	ft_error(int opt)
 		write(2, "Error: Invalid argument\n", 25);
 	if (opt == 3)
 		write(2, "Error: you need at least one philosopher\n", 42);
-	exit(1);
+	return (1);
 }
